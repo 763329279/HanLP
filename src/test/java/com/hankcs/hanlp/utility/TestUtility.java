@@ -58,7 +58,7 @@ public class TestUtility
         if (target.exists()) return target.getAbsolutePath();
         try
         {
-            File parentFile = parentPath == null ? new File(name).getParentFile() : new File(parentPath);
+            File parentFile = parentPath == null || parentPath.isEmpty() ? new File(name).getParentFile() : new File(parentPath);
             if (!parentFile.exists()) parentFile.mkdirs();
             String filePath = downloadFile(url, parentFile.getAbsolutePath());
             if (filePath.endsWith(".zip"))
