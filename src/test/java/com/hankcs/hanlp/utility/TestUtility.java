@@ -15,6 +15,9 @@ import com.hankcs.hanlp.HanLP;
 import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.net.URLEncoder;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
@@ -194,9 +197,27 @@ public class TestUtility
 
     private static HttpURLConnection request(String url) throws IOException
     {
-        HttpURLConnection httpConn = (HttpURLConnection) new URL(url).openConnection();
+        HttpURLConnection httpConn = (HttpURLConnection) new URL(getChineseURICode(url)).openConnection();
         httpConn.setRequestProperty("User-Agent", "Mozilla/5.0 (Macintosh; U; Intel Mac OS X 10.4; en-US; rv:1.9.2.2) Gecko/20100316 Firefox/3.6.2");
         return httpConn;
+    }
+
+    /**
+     * URL中文字符编码转换
+     * @param url 含中文字符的URL
+     * @return
+     */
+    public static String getChineseURICode(String url) throws IOException {
+        if (url == null || url.isEmpty()) {
+            throw new IOException("URL cannot be null");
+        }
+        Matcher matcher = Pattern.compile("[\u4e00-\u9fa5]").matcher(url);
+        String c;
+        while (matcher.find()) {
+            c = matcher.group();
+            url = url.replaceAll(c,URLEncoder.encode(c,"UTF-8"));
+        }
+        return url;
     }
 
     private static void unzip(String zipFilePath, String destDir, boolean overwrite)
