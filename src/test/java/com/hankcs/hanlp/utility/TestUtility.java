@@ -118,10 +118,12 @@ public class TestUtility
             {
                 // extracts file name from header field
                 int index = disposition.indexOf("filename=");
-                if (index > 0)
-                {
+                if (index > 0) {
                     fileName = disposition.substring(index + 10,
-                                                     disposition.length() - 1);
+                        disposition.length() - 1);
+                } else {
+                    // extracts file name from URL
+                    fileName = new File(httpConn.getURL().getPath()).getName();
                 }
             }
             else
